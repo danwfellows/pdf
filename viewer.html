@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portfolio PDF Viewer</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.5.136/pdf.min.js"></script>
+<style>
+body{margin:0;font-family:Arial,sans-serif;background:#eee}
+#toolbar{position:sticky;top:0;background:#222;color:#fff;padding:10px;display:flex;gap:10px;align-items:center;justify-content:center;flex-wrap:wrap}
+button{padding:8px 12px;border:none;border-radius:4px;cursor:pointer}
+#pages{display:flex;flex-direction:column;align-items:center;padding:20px}
+canvas{background:#fff;box-shadow:0 2px 10px rgba(0,0,0,.2);margin-bottom:20px;max-width:100%;height:auto}
+</style>
+</head>
+<body>
+<div id="toolbar">
+<button onclick="zoomOut()">−</button>
+<span id="zoomLabel">100%</span>
+<button onclick="zoomIn()">+</button>
+</div>
+<div id="pages"></div>
+<script>
+const params=new URLSearchParams(location.search);
+const pdfUrl=params.get("file");
+if(!pdfUrl){document.getElementById("pages").innerHTML="<h2>Add ?file=YOUR_PDF_URL to the address.</h2>";throw new Error();}
+pdfjsLib.GlobalWorkerOptions.workerSrc="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.5.136/pdf.worker.min.js";
+let pdfDoc=null,scale=1.2;
+async function render(){
+ const container=document.getElementById("pages");
+ container.innerHTML="";
+ for(let n=1;n<=pdfDoc.numPages;n++){
+   const page=await pdfDoc.getPage(n);
+   const vp=page.getViewport({scale});
+   const c=document.createElement("canvas");
+   c.width=vp.width;c.height=vp.height;
+   container.appendChild(c);
+   await page.render({canvasContext:c.getContext("2d"),viewport:vp}).promise;
+ }
+ document.getElementById("zoomLabel").textContent=Math.round(scale*100)+"%";
+}
+function zoomIn(){scale+=0.2;render();}
+function zoomOut(){if(scale>0.4){scale-=0.2;render();}}
+pdfjsLib.getDocument(pdfUrl).promise.then(pdf=>{pdfDoc=pdf;render();});
+</script>
+</body>
+</html>
