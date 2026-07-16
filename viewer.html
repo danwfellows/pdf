@@ -11,7 +11,7 @@ canvas{background:#fff;box-shadow:0 2px 10px rgba(0,0,0,.2);margin-bottom:20px;m
 <script type="module">
 import * as pdfjsLib from 'https://cdn.jsdelivr.net/npm/pdfjs-dist@4.10.38/build/pdf.min.mjs';
 pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdn.jsdelivr.net/npm/pdfjs-dist@4.10.38/build/pdf.worker.min.mjs';
-let scale=1.2,pdfDoc;
+let scale=1,pdfDoc;
 const file=new URLSearchParams(location.search).get('file')||'Minizine%20Sep%202023.pdf';
 async function render(){
  const wrap=document.getElementById('viewer');wrap.innerHTML='';
