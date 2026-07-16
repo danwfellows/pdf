@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Portfolio Viewer</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,Arial,sans-serif;background:#181a1f;color:#fff}
+header{
+height:64px;background:#111318;border-bottom:1px solid #2d3138;
+display:flex;align-items:center;justify-content:space-between;
+padding:0 24px;position:sticky;top:0
+}
+h1{font-size:18px;margin:0}
+#frame{
+width:100%;
+height:calc(100vh - 64px);
+border:0;
+background:#2b2f36;
+}
+</style>
+</head>
+<body>
+<header>
+<h1>Portfolio</h1>
+</header>
+
+<iframe id="frame" title="Portfolio PDF"></iframe>
+
+<script>
+const params=new URLSearchParams(location.search);
+const pdf=params.get("file")||"portfolio.pdf";
+
+// Always use a relative path by default.
+// If a full URL is supplied it will also work if the host permits it.
+document.getElementById("frame").src =
+encodeURI(pdf) + "#toolbar=0&navpanes=0&scrollbar=1&view=FitH";
+</script>
+
+</body>
+</html>
